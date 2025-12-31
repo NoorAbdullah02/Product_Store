@@ -7,7 +7,11 @@ export const users = pgTable("users", {
     name: text("name").notNull(),
     imageUrl: text("image_url"),
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at",
+        { mode: "date" })
+        .defaultNow()
+        .notNull()
+        .$onUpdate(() => new Date()),
 });
 
 
@@ -18,7 +22,11 @@ export const products = pgTable("products", {
     imageUrl: text("image_url").notNull(),
     userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }).notNull(),
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at",
+        { mode: "date" })
+        .defaultNow()
+        .notNull()
+        .$onUpdate(() => new Date()),
 })
 
 
@@ -28,11 +36,15 @@ export const comments = pgTable("comments", {
     userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }).notNull(),
     productId: uuid("product_id").notNull().references(() => products.id, { onDelete: "cascade" }).notNull(),
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at",
+        { mode: "date" })
+        .defaultNow()
+        .notNull()
+        .$onUpdate(() => new Date()),
 });
 
 //user relations
-
+ 
 export const userRelations = relations(users, ({ many }) => ({
     products: many(products),
     comments: many(comments),

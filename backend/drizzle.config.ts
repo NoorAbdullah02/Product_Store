@@ -9,4 +9,4 @@ export default defineConfig({
     dbCredentials:{
         url: env.DB_URL,
     }
-})
+}) 
