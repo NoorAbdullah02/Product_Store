@@ -29,8 +29,8 @@ export const getAllProducts = async () => {
     try {
 
         //user apis
-        const { response } = await api.get('/products');
-        return response;
+        const response = await api.get('/products');
+        return response.data;
 
 
     } catch (error) {
@@ -43,8 +43,8 @@ export const getProductById = async (id) => {
     try {
 
         //user apis
-        const { response } = await api.get(`/products/${id}`);
-        return response;
+        const response = await api.get(`/products/${id}`);
+        return response.data;
     } catch (error) {
         console.error('Error syncing user data:', error);
     }
@@ -54,8 +54,8 @@ export const getMyProducts = async () => {
     try {
 
         //user apis
-        const { response } = await api.get(`/products/my`);
-        return response;
+        const response = await api.get(`/products/my`);
+        return response.data;
     } catch (error) {
         console.error('Error syncing user data:', error);
     }
@@ -66,8 +66,8 @@ export const createProduct = async (productData) => {
     try {
 
         //user apis
-        const { response } = await api.post('/products', productData);
-        return response;
+        const response = await api.post('/products', productData);
+        return response.data;
     } catch (error) {
         console.error('Error syncing user data:', error);
     }
@@ -78,8 +78,8 @@ export const UpdateProduct = async (id) => {
     try {
 
         //user apis
-        const { response } = await api.put(`/products/${id}`);
-        return response;
+        const response = await api.put(`/products/${id}`);
+        return response.data;
     } catch (error) {
         console.error('Error syncing user data:', error);
     }

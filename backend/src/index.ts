@@ -5,7 +5,7 @@ import userRoute from '../src/routes/userRoute';
 import productRoute from '../src/routes/productRoute';
 import commentRoute from '../src/routes/commentRoute';
 import cookieParser from "cookie-parser";
-import { checkValiditi } from './middleware.ts/checkValidUser';
+import { checkValiditi } from './middleware/checkValidUser';
 
 
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as commentController from '../controllers/commentController';
-import { checkValiditi } from "../middleware.ts/checkValidUser";
+import { checkValiditi } from "../middleware/checkValidUser";
 
 const router = Router();
 

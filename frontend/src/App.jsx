@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from './components/Navbar.jsx'
-import { Routes, Route } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router'
 import HomePage from './pages/HomePage.jsx'
 import ProductPage from './pages/ProductPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
@@ -9,6 +9,9 @@ import EditProductPage from './pages/EditPage.jsx'
 import AuthPages from './hooks/AuthPages.jsx'
 
 const App = () => {
+
+  const isSignedIn = true;
+
   return (
     <div className='min-h-screen bg-base-100'>
       <Navbar />
@@ -18,7 +21,7 @@ const App = () => {
           <Route path='/' element={<HomePage />} ></Route>
           <Route path='/product/:id' element={< ProductPage />} ></Route>
           <Route path='/profile' element={< ProfilePage />} ></Route>
-          <Route path='/create' element={<CreateProductPage />} ></Route>
+          <Route path='/create' element={ isSignedIn ? <CreateProductPage /> : <Navigate to={'/'}/>} ></Route>
           <Route path='/edit/:id' element={<EditProductPage />} ></Route>
           <Route path='/login' element={<AuthPages />} ></Route>
           <Route path='/register' element={<AuthPages />} ></Route>
