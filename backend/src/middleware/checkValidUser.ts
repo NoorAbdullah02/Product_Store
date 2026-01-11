@@ -6,9 +6,22 @@ import { getUserByEmail } from '../db/queries';
 
 export async function checkValiditi(req: Request, res: Response, next: NextFunction) {
 
-    const token = req.cookies.token;
+    let token: string | undefined = undefined;
+
+
+    if (req.cookies && req.cookies.token) {
+        token = req.cookies.token;
+    } else if (req.headers && req.headers.authorization) {
+        const auth = req.headers.authorization as string;
+        if (auth.startsWith('Bearer ')) {
+            token = auth.slice(7);
+        }
+    }
+
+    console.log('Auth middleware - resolved token present:', !!token);
 
     if (!token) {
+        console.warn('Auth failed: no token provided (cookies, authorization header)');
         return res.status(401).json({ message: "Unauthorized" });
     }
     try {

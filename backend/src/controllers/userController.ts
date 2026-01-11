@@ -12,6 +12,11 @@ import bcrypt from 'bcryptjs';
 
 import jwt from 'jsonwebtoken';
 
+import multer from 'multer';
+
+export const upload = multer({ storage: multer.memoryStorage() });
+
+
 
 
 

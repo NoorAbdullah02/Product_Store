@@ -1,9 +1,21 @@
 import axios from 'axios';
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
-    withCredentials: true, // to send cookies with requests
+    withCredentials: true, // still send cookies where possible
 })
 
+// Attach Authorization header from localStorage token if available
+api.interceptors.request.use((config) => {
+    try {
+        const token = localStorage.getItem('token');
+        if (token && config.headers) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+    } catch (e) {
+        // ignore localStorage errors
+    }
+    return config;
+});
 
 export default api;
 

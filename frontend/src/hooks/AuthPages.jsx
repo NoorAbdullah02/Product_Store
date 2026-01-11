@@ -67,8 +67,9 @@ const AuthPages = () => {
         setEmail('');
         setPassword('');
 
-        // Store token in cookie
+        // Store token in cookie (for compatibility) and in localStorage so axios can send Authorization header
         setCookie('token', response.token, 7);
+        try { localStorage.setItem('token', response.token); } catch (e) { }
 
         // Navigate after short delay
         setTimeout(() => {

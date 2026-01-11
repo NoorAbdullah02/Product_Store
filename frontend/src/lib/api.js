@@ -66,7 +66,7 @@ export const createProduct = async (productData) => {
     try {
 
         //user apis
-        const response = await api.post('/products', productData);
+        const response = await api.post('/products/create', productData);
         return response.data;
     } catch (error) {
         console.error('Error syncing user data:', error);

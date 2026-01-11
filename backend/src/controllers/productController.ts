@@ -3,6 +3,11 @@ import { Response, Request } from 'express';
 import * as quiries from '../db/queries';
 import { imagekit } from '../config/imagekit';
 
+import multer from 'multer';
+
+export const upload = multer({ storage: multer.memoryStorage() });
+
+
 
 //get my products
 export const getAllProducts = async (req: Request, res: Response) => {
@@ -60,32 +65,49 @@ export const getMyProducts = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
     try {
+        // Debug: log incoming request content-type, body keys and whether file is attached
+        console.log('createProduct: content-type=', req.headers['content-type']);
+        console.log('createProduct: bodyKeys=', Object.keys(req.body));
+        console.log('createProduct: hasFile=', !!req.file);
+
         const { title, description } = req.body;
 
         if (!title || !description) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        if (!req.file) {
-            return res.status(400).json({ message: "Image is required" });
-        }
-
         const user_id = (req as any).user?.id;
 
+        // Support either an uploaded file (multipart/form-data) or a direct image URL in JSON
+        let imageUrl: string | undefined = req.body.imageUrl;
 
-        const file = req.file as Express.Multer.File;
+        if (req.file) {
+            const file = req.file as Express.Multer.File;
 
-        // Upload image to ImageKit
-        const uploadedImage = await imagekit.upload({
-            file: file.buffer,
-            fileName: `${Date.now()}-${file.originalname}`,
-            folder: "/products",
-        });
+            // Defensive check - ensure arrived file has a buffer
+            if (!file.buffer) {
+                console.error('Uploaded file missing buffer', { file });
+                return res.status(400).json({ message: 'Uploaded file is invalid' });
+            }
+
+            // Upload image to ImageKit
+            const uploadedImage = await imagekit.upload({
+                file: file.buffer,
+                fileName: `${Date.now()}-${file.originalname}`,
+                folder: "/products",
+            });
+
+            imageUrl = uploadedImage.url;
+        }
+
+        if (!imageUrl) {
+            return res.status(400).json({ message: "Image is required" });
+        }
 
         const product = await quiries.createProduct({
             title,
             description,
-            imageUrl: uploadedImage.url,
+            imageUrl,
             userId: user_id,
         });
 

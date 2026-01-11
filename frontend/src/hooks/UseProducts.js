@@ -1,4 +1,4 @@
-import { createProduct, getAllProducts } from "../lib/api"
+import { createProduct, DeleteProduct, getAllProducts, getProductById } from "../lib/api"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
 
@@ -16,3 +16,17 @@ export const useCreateProducts = () => {
     return result;
 }
 
+export const useProduct = (id) => {
+    return useQuery({
+        queryKey: ['product', id],
+        queryFn: () => getProductById(id),
+        enabled: !!id
+        // double bank operator
+    });
+}
+
+export const useDeleteProduct = () => {
+    return useMutation({
+        mutationFn: DeleteProduct
+    })
+}

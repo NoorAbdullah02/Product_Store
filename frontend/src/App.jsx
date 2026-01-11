@@ -19,9 +19,9 @@ const App = () => {
       <main className='mx-w-5xl mx-auto px-4 py8' >
         <Routes>
           <Route path='/' element={<HomePage />} ></Route>
-          <Route path='/product/:id' element={< ProductPage />} ></Route>
+          <Route path='/product/:id' element={isSignedIn ? < ProductPage /> : <Navigate to={'/'} />} ></Route>
           <Route path='/profile' element={< ProfilePage />} ></Route>
-          <Route path='/create' element={ isSignedIn ? <CreateProductPage /> : <Navigate to={'/'}/>} ></Route>
+          <Route path='/create' element={isSignedIn ? <CreateProductPage /> : <Navigate to={'/'} />} ></Route>
           <Route path='/edit/:id' element={<EditProductPage />} ></Route>
           <Route path='/login' element={<AuthPages />} ></Route>
           <Route path='/register' element={<AuthPages />} ></Route>

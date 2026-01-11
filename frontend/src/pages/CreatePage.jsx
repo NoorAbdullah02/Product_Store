@@ -1,35 +1,54 @@
-import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useCreateProducts } from '../hooks/UseProducts'
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useCreateProducts } from '../hooks/UseProducts';
 import {
   ArrowLeftIcon,
   FileTextIcon,
   ImageIcon,
   SparkleIcon,
   TypeIcon,
-} from 'lucide-react'
+} from 'lucide-react';
 
 const CreatePage = () => {
-  const navigate = useNavigate()
-  const { mutateAsync: createProduct, isLoading } = useCreateProducts()
+  const navigate = useNavigate();
+  const { mutateAsync: createProduct, isLoading } = useCreateProducts();
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    imageUrl: '',
-  })
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
 
+  // Handle form submit
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+
+    if (!image) {
+      alert('Please select an image');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('image', image); // Important for file upload
 
     try {
-      await createProduct(formData)
-      navigate('/')
+      await createProduct(formData); // call mutation
+      navigate('/'); // go back to homepage
     } catch (error) {
-      console.error('Product creation failed:', error)
-      alert('Failed to create product')
+      console.error('Product creation failed:', error);
+      alert('Failed to create product');
     }
-  }
+  };
+
+  // Handle image preview
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  };
 
   return (
     <div className="max-w-lg mx-auto p-4">
@@ -53,39 +72,32 @@ const CreatePage = () => {
                 type="text"
                 placeholder="Product Title"
                 className="grow"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
               />
             </label>
 
-            {/* Image URL */}
+            {/* Image Upload */}
             <label className="input input-bordered flex items-center gap-2 bg-base-200">
               <ImageIcon className="size-4 text-base-content/50" />
               <input
-                type="text"
-                placeholder="Image URL"
+                type="file"
+                name="image"
+                accept="image/*"
                 className="grow"
-                value={formData.imageUrl}
-                onChange={(e) =>
-                  setFormData({ ...formData, imageUrl: e.target.value })
-                }
+                onChange={handleImageChange}
                 required
               />
             </label>
 
             {/* Image Preview */}
-            {formData.imageUrl && (
+            {preview && (
               <div className="rounded-box overflow-hidden border">
                 <img
-                  src={formData.imageUrl}
+                  src={preview}
                   alt="Preview"
                   className="w-full h-40 object-cover"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                  }}
                 />
               </div>
             )}
@@ -97,13 +109,8 @@ const CreatePage = () => {
                 <textarea
                   className="textarea textarea-ghost w-full"
                   placeholder="Product Description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      description: e.target.value,
-                    })
-                  }
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   required
                 />
               </div>
@@ -121,7 +128,7 @@ const CreatePage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreatePage
+export default CreatePage;
